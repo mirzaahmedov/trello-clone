@@ -1,11 +1,16 @@
+import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 
 export const ColumnCreatePayloadSchema = z.object({
   title: z.string().min(1),
 });
-export type ColumnCreatePayloadType = z.infer<typeof ColumnCreatePayloadSchema>;
+export class ColumnCreatePayloadDto extends createZodDto(
+  ColumnCreatePayloadSchema,
+) {}
 
 export const ColumnUpdatePayloadSchema = z.object({
   title: z.string().optional(),
 });
-export type ColumnUpdatePayloadType = z.infer<typeof ColumnUpdatePayloadSchema>;
+export class ColumnUpdatePayloadDto extends createZodDto(
+  ColumnUpdatePayloadSchema,
+) {}

@@ -1,3 +1,4 @@
+import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 
 export const TokenPayloadSchema = z.object({
@@ -9,10 +10,10 @@ export const SignupPayloadSchema = z.object({
   email: z.string().min(1).email(),
   password: z.string().min(8).max(20),
 });
-export type SignupPayloadType = z.infer<typeof SignupPayloadSchema>;
+export class SignupPayloadDto extends createZodDto(SignupPayloadSchema) {}
 
 export const SigninPayloadSchema = z.object({
   email: z.string().min(1).email(),
   password: z.string().min(8).max(20),
 });
-export type SigninPayloadType = z.infer<typeof SigninPayloadSchema>;
+export class SigninPayloadDto extends createZodDto(SignupPayloadSchema) {}

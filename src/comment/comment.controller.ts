@@ -14,26 +14,35 @@ import { CommentService } from './comment.service';
 import { AuthGuard } from '@app/auth/auth.guard';
 import { UserId } from '@app/auth/auth.decorator';
 import {
+  CommentCreatePayloadDto,
   CommentCreatePayloadSchema,
-  CommentCreatePayloadType,
+  CommentUpdatePayloadDto,
   CommentUpdatePayloadSchema,
-  CommentUpdatePayloadType,
 } from './comment.models';
 import { ZodPipe } from '@app/utils/zod/zod.pipe';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('cards/:cardId/comments')
+@ApiTags('Comments')
 export class CommentController {
   constructor(private readonly service: CommentService) {}
 
   @Post()
-  @ApiTags('Comment')
+  @ApiOkResponse({
+    example: {
+      id: '85de1520-8cee-443a-9231-e1e15aa92ce6',
+      content: 'Example',
+      cardId: '6504ff8b-7705-4bfe-b3c1-0b43f7bd2e83',
+      userId: 'ed7d7b40-c561-4c7a-a754-55f8477eaf75',
+      createdAt: '2024-08-20T17:39:57.295Z',
+    },
+  })
   @UseGuards(AuthGuard)
   async createComment(
     @UserId() userId: string,
     @Param('cardId') cardId: string,
     @Body(new ZodPipe(CommentCreatePayloadSchema))
-    payload: CommentCreatePayloadType,
+    payload: CommentCreatePayloadDto,
   ) {
     const comment = await this.service.createComment({
       user: {
@@ -57,14 +66,30 @@ export class CommentController {
   }
 
   @Get()
-  @ApiTags('Comment')
+  @ApiOkResponse({
+    example: {
+      id: '85de1520-8cee-443a-9231-e1e15aa92ce6',
+      content: 'Example',
+      cardId: '6504ff8b-7705-4bfe-b3c1-0b43f7bd2e83',
+      userId: 'ed7d7b40-c561-4c7a-a754-55f8477eaf75',
+      createdAt: '2024-08-20T17:39:57.295Z',
+    },
+  })
   @UseGuards(AuthGuard)
   async getComments(@Param('cardId') cardId: string) {
     return await this.service.getComments(cardId);
   }
 
   @Get(':id')
-  @ApiTags('Comment')
+  @ApiOkResponse({
+    example: {
+      id: '85de1520-8cee-443a-9231-e1e15aa92ce6',
+      content: 'Example',
+      cardId: '6504ff8b-7705-4bfe-b3c1-0b43f7bd2e83',
+      userId: 'ed7d7b40-c561-4c7a-a754-55f8477eaf75',
+      createdAt: '2024-08-20T17:39:57.295Z',
+    },
+  })
   @UseGuards(AuthGuard)
   async getCommentById(
     @Param('cardId') cardId: string,
@@ -78,14 +103,22 @@ export class CommentController {
   }
 
   @Patch(':id')
-  @ApiTags('Comment')
+  @ApiOkResponse({
+    example: {
+      id: '85de1520-8cee-443a-9231-e1e15aa92ce6',
+      content: 'Example',
+      cardId: '6504ff8b-7705-4bfe-b3c1-0b43f7bd2e83',
+      userId: 'ed7d7b40-c561-4c7a-a754-55f8477eaf75',
+      createdAt: '2024-08-20T17:39:57.295Z',
+    },
+  })
   @UseGuards(AuthGuard)
   async updateComment(
     @UserId() userId: string,
     @Param('cardId') cardId: string,
     @Param('id') id: string,
     @Body(new ZodPipe(CommentUpdatePayloadSchema))
-    payload: CommentUpdatePayloadType,
+    payload: CommentUpdatePayloadDto,
   ) {
     const comment = await this.service.updateComment(
       {
@@ -100,7 +133,15 @@ export class CommentController {
   }
 
   @Delete(':id')
-  @ApiTags('Comment')
+  @ApiOkResponse({
+    example: {
+      id: '85de1520-8cee-443a-9231-e1e15aa92ce6',
+      content: 'Example',
+      cardId: '6504ff8b-7705-4bfe-b3c1-0b43f7bd2e83',
+      userId: 'ed7d7b40-c561-4c7a-a754-55f8477eaf75',
+      createdAt: '2024-08-20T17:39:57.295Z',
+    },
+  })
   @UseGuards(AuthGuard)
   async deleteComment(
     @UserId() userId: string,

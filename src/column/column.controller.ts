@@ -13,25 +13,33 @@ import {
 import { ColumnService } from './column.service';
 import { ZodPipe } from '@app/utils/zod/zod.pipe';
 import {
+  ColumnCreatePayloadDto,
   ColumnCreatePayloadSchema,
-  ColumnCreatePayloadType,
+  ColumnUpdatePayloadDto,
   ColumnUpdatePayloadSchema,
-  ColumnUpdatePayloadType,
 } from './column.models';
 import { AuthGuard, IsAuthorGuard } from '@app/auth/auth.guard';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('users/:userId/columns')
+@ApiTags('Columns')
 export class ColumnController {
   constructor(private service: ColumnService) {}
 
   @Post()
-  @ApiTags('Column')
+  @ApiOkResponse({
+    example: {
+      id: 'd0390268-ad5c-4072-8870-dfe4765a2139',
+      title: 'Example',
+      userId: 'ed7d7b40-c561-4c7a-a754-55f8477eaf75',
+      createdAt: '2024-08-20T17:32:45.132Z',
+    },
+  })
   @UseGuards(AuthGuard, IsAuthorGuard)
   async createColumn(
     @Param('userId') userId: string,
     @Body(new ZodPipe(ColumnCreatePayloadSchema))
-    payload: ColumnCreatePayloadType,
+    payload: ColumnCreatePayloadDto,
   ) {
     const column = await this.service.createColumn({
       title: payload.title,
@@ -45,14 +53,30 @@ export class ColumnController {
   }
 
   @Get()
-  @ApiTags('Column')
+  @ApiOkResponse({
+    example: [
+      {
+        id: 'd0390268-ad5c-4072-8870-dfe4765a2139',
+        title: 'Example',
+        userId: 'ed7d7b40-c561-4c7a-a754-55f8477eaf75',
+        createdAt: '2024-08-20T17:32:45.132Z',
+      },
+    ],
+  })
   @UseGuards(AuthGuard)
   async getColumns(@Param('userId') userId: string) {
     return await this.service.getColumns(userId);
   }
 
   @Get(':id')
-  @ApiTags('Column')
+  @ApiOkResponse({
+    example: {
+      id: 'd0390268-ad5c-4072-8870-dfe4765a2139',
+      title: 'Example',
+      userId: 'ed7d7b40-c561-4c7a-a754-55f8477eaf75',
+      createdAt: '2024-08-20T17:32:45.132Z',
+    },
+  })
   @UseGuards(AuthGuard)
   async getColumnById(
     @Param('userId') userId: string,
@@ -66,13 +90,20 @@ export class ColumnController {
   }
 
   @Patch(':id')
-  @ApiTags('Column')
+  @ApiOkResponse({
+    example: {
+      id: 'd0390268-ad5c-4072-8870-dfe4765a2139',
+      title: 'Example',
+      userId: 'ed7d7b40-c561-4c7a-a754-55f8477eaf75',
+      createdAt: '2024-08-20T17:32:45.132Z',
+    },
+  })
   @UseGuards(AuthGuard, IsAuthorGuard)
   async updateColumn(
     @Param('userId') userId: string,
     @Param('id') id: string,
     @Body(new ZodPipe(ColumnUpdatePayloadSchema))
-    payload: ColumnUpdatePayloadType,
+    payload: ColumnUpdatePayloadDto,
   ) {
     const column = await this.service.updateColumn(
       {
@@ -88,7 +119,14 @@ export class ColumnController {
   }
 
   @Delete(':id')
-  @ApiTags('Column')
+  @ApiOkResponse({
+    example: {
+      id: 'd0390268-ad5c-4072-8870-dfe4765a2139',
+      title: 'Example',
+      userId: 'ed7d7b40-c561-4c7a-a754-55f8477eaf75',
+      createdAt: '2024-08-20T17:32:45.132Z',
+    },
+  })
   @UseGuards(AuthGuard, IsAuthorGuard)
   async deleteColumn(@Param('userId') userId: string, @Param('id') id: string) {
     return await this.service.deleteColumn({

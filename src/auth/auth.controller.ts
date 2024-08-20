@@ -12,10 +12,10 @@ import {
 } from '@nestjs/common';
 import { ZodPipe } from '@app/utils/zod/zod.pipe';
 import {
+  SigninPayloadDto,
   SigninPayloadSchema,
-  SigninPayloadType,
+  SignupPayloadDto,
   SignupPayloadSchema,
-  SignupPayloadType,
   TokenPayloadType,
 } from './auth.models';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
@@ -36,10 +36,18 @@ export class AuthController {
 
   @Post('signin')
   @ApiOkResponse({
-    example: { email: 'example@example.com', password: 'example' },
+    example: {
+      user: {
+        id: 'ed7d7b40-c561-4c7a-a754-55f8477eaf75',
+        email: 'example@gmail.com',
+        createdAt: '2024-08-20T15:25:04.744Z',
+      },
+      token:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJlZDdkN2I0MC1jNTYxLTRjN2EtYTc1NC01NWY4NDc3ZWFmNzUiLCJpYXQiOjE3MjQxNzUwMzN9.IiDL-SIfss7uffAhcf2f_5F_u6D1E8B4F4yocws7ho8',
+    },
   })
   async signin(
-    @Body(new ZodPipe(SigninPayloadSchema)) payload: SigninPayloadType,
+    @Body(new ZodPipe(SigninPayloadSchema)) payload: SigninPayloadDto,
   ) {
     const user = await this.userService.getUserByEmail(payload.email);
     if (!user || !bcrypt.compareSync(payload.password, user.password)) {
@@ -63,10 +71,18 @@ export class AuthController {
 
   @Post('signup')
   @ApiOkResponse({
-    example: { email: 'example@example.com', password: 'example' },
+    example: {
+      user: {
+        id: 'ed7d7b40-c561-4c7a-a754-55f8477eaf75',
+        email: 'example@gmail.com',
+        createdAt: '2024-08-20T15:25:04.744Z',
+      },
+      token:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJlZDdkN2I0MC1jNTYxLTRjN2EtYTc1NC01NWY4NDc3ZWFmNzUiLCJpYXQiOjE3MjQxNzUwMzN9.IiDL-SIfss7uffAhcf2f_5F_u6D1E8B4F4yocws7ho8',
+    },
   })
   async signup(
-    @Body(new ZodPipe(SignupPayloadSchema)) payload: SignupPayloadType,
+    @Body(new ZodPipe(SignupPayloadSchema)) payload: SignupPayloadDto,
   ) {
     const encrypted = await bcrypt.hash(payload.password, 10);
 
@@ -92,7 +108,13 @@ export class AuthController {
   }
 
   @Get('me')
-  @ApiTags('User')
+  @ApiOkResponse({
+    example: {
+      id: 'ed7d7b40-c561-4c7a-a754-55f8477eaf75',
+      email: 'example@gmail.com',
+      createdAt: '2024-08-20T15:25:04.744Z',
+    },
+  })
   @UseGuards(AuthGuard)
   async getUserById(@UserId() userId: string) {
     const user = await this.userService.getUserById(userId);
