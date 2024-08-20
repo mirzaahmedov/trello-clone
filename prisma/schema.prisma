@@ -7,42 +7,50 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model user {
-  id        String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+model User {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   email     String    @unique
   password  String
-  columns   column[]
-  comments  comment[]
-  card      card[]
+  columns   Column[]
+  comments  Comment[]
+  card      Card[]
   createdAt DateTime  @default(now())
+
+  @@map("users")
 }
 
-model column {
-  id        String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+model Column {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   title     String
-  user      user     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
   userId    String   @db.Uuid
-  cards     card[]
+  cards     Card[]
   createdAt DateTime @default(now())
+
+  @@map("columns")
 }
 
-model card {
-  id        String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+model Card {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   content   String
-  column    column    @relation(fields: [columnId], references: [id])
+  column    Column    @relation(fields: [columnId], references: [id])
   columnId  String    @db.Uuid
-  comments  comment[]
-  user      user      @relation(fields: [userId], references: [id])
+  comments  Comment[]
+  user      User      @relation(fields: [userId], references: [id])
   userId    String    @db.Uuid
   createdAt DateTime  @default(now())
+
+  @@map("cards")
 }
 
-model comment {
-  id        String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+model Comment {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   content   String
-  card      card     @relation(fields: [cardId], references: [id])
+  card      Card     @relation(fields: [cardId], references: [id])
   cardId    String   @db.Uuid
-  user      user     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
   userId    String   @db.Uuid
   createdAt DateTime @default(now())
+
+  @@map("comments")
 }

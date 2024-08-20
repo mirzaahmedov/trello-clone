@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const CardCreatePayloadSchema = z.object({
-  content: z.string(),
+  content: z.string().min(1),
 });
 export type CardCreatePayloadType = z.infer<typeof CardCreatePayloadSchema>;
 

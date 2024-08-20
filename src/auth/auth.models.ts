@@ -1,13 +1,18 @@
 import { z } from 'zod';
 
+export const TokenPayloadSchema = z.object({
+  userId: z.string().uuid(),
+});
+export type TokenPayloadType = z.infer<typeof TokenPayloadSchema>;
+
 export const SignupPayloadSchema = z.object({
-  email: z.string().min(1, 'required').email(),
+  email: z.string().min(1).email(),
   password: z.string().min(8).max(20),
 });
 export type SignupPayloadType = z.infer<typeof SignupPayloadSchema>;
 
 export const SigninPayloadSchema = z.object({
-  email: z.string().min(1, 'required').email(),
-  password: z.string().min(1, 'required'),
+  email: z.string().min(1).email(),
+  password: z.string().min(8).max(20),
 });
 export type SigninPayloadType = z.infer<typeof SigninPayloadSchema>;

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const ColumnCreatePayloadSchema = z.object({
-  title: z.string().min(1, 'required'),
+  title: z.string().min(1),
 });
 export type ColumnCreatePayloadType = z.infer<typeof ColumnCreatePayloadSchema>;
 

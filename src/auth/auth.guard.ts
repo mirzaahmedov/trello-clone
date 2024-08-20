@@ -5,11 +5,15 @@ import {
   UnauthorizedException,
   ForbiddenException,
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
+  ) {}
 
   async canActivate(ctx: ExecutionContext): Promise<boolean> {
     try {
@@ -20,7 +24,9 @@ export class AuthGuard implements CanActivate {
         throw new UnauthorizedException();
       }
 
-      const payload = this.authService.verifyJWTToken(token);
+      const payload = this.jwtService.verify(token, {
+        secret: this.configService.get<string>('JWT_SECRET'),
+      });
       if (!payload) {
         throw new UnauthorizedException();
       }
@@ -39,7 +45,6 @@ export class AuthGuard implements CanActivate {
 export class IsAuthorGuard implements CanActivate {
   async canActivate(ctx: ExecutionContext): Promise<boolean> {
     const request = ctx.switchToHttp().getRequest();
-    console.log(request);
     if (request.params?.userId !== request?.userId) {
       throw new ForbiddenException(
         'you are not allowed to change this resource',

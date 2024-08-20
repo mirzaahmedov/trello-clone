@@ -14,7 +14,7 @@ export class CardService {
     });
   }
 
-  createCard(data: Prisma.cardCreateInput) {
+  createCard(data: Prisma.CardCreateInput) {
     return this.prisma.card.create({
       data,
     });
@@ -30,8 +30,8 @@ export class CardService {
   }
 
   updateCard(
-    where: Prisma.cardUpdateArgs['where'],
-    data: Prisma.cardUpdateInput,
+    where: Prisma.CardUpdateArgs['where'],
+    data: Prisma.CardUpdateInput,
   ) {
     return this.prisma.card.update({
       data,
@@ -39,7 +39,7 @@ export class CardService {
     });
   }
 
-  deleteCard(where: Prisma.cardDeleteArgs['where']) {
+  deleteCard(where: Prisma.CardDeleteArgs['where']) {
     return this.prisma.card.delete({
       where,
     });

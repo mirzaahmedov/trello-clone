@@ -6,7 +6,6 @@ export class ZodPipe<T extends ZodSchema> implements PipeTransform {
   constructor(private readonly schema: T) {}
 
   transform(value: any) {
-    console.log(value);
     return this.schema.parse(value);
   }
 }

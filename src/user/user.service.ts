@@ -10,7 +10,7 @@ export class UserService {
     return this.prisma.user.findMany();
   }
 
-  createUser(data: Prisma.userCreateInput) {
+  createUser(data: Prisma.UserCreateInput) {
     return this.prisma.user.create({
       data,
     });
@@ -32,7 +32,7 @@ export class UserService {
     });
   }
 
-  updateUser(id: string, data: Prisma.userUpdateInput) {
+  updateUser(id: string, data: Prisma.UserUpdateInput) {
     return this.prisma.user.update({
       data,
       where: {

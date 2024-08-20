@@ -11,13 +11,13 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ColumnService } from './column.service';
-import { ZodPipe } from '@app/utils/validation/zod.pipe';
+import { ZodPipe } from '@app/utils/zod/zod.pipe';
 import {
   ColumnCreatePayloadSchema,
   ColumnCreatePayloadType,
   ColumnUpdatePayloadSchema,
   ColumnUpdatePayloadType,
-} from './column.schema';
+} from './column.models';
 import { AuthGuard, IsAuthorGuard } from '@app/auth/auth.guard';
 import { ApiTags } from '@nestjs/swagger';
 

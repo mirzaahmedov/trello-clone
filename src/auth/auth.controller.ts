@@ -3,49 +3,67 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Get,
   InternalServerErrorException,
+  NotFoundException,
   Post,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { ZodPipe } from '@app/utils/validation/zod.pipe';
+import { ZodPipe } from '@app/utils/zod/zod.pipe';
 import {
   SigninPayloadSchema,
   SigninPayloadType,
   SignupPayloadSchema,
   SignupPayloadType,
-} from './auth.schema';
-import { ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
+  TokenPayloadType,
+} from './auth.models';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from './auth.guard';
+import { UserId } from './auth.decorator';
+import { UserService } from '@app/user/user.service';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('auth')
+@ApiTags('Authentication')
 export class AuthController {
-  constructor(private service: AuthService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly configService: ConfigService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   @Post('signin')
-  @ApiTags('Authentication')
   @ApiOkResponse({
-    example: { email: 'example@gmail.com', password: 'example' },
+    example: { email: 'example@example.com', password: 'example' },
   })
   async signin(
     @Body(new ZodPipe(SigninPayloadSchema)) payload: SigninPayloadType,
   ) {
-    const user = await this.service.findUserByEmail(payload.email);
+    const user = await this.userService.getUserByEmail(payload.email);
     if (!user || !bcrypt.compareSync(payload.password, user.password)) {
       throw new UnauthorizedException('incorrect email or password');
     }
 
-    const token = this.service.createJWTToken(user.id);
+    const token = this.jwtService.sign(
+      {
+        userId: user.id,
+      } satisfies TokenPayloadType,
+      {
+        secret: this.configService.get<string>('JWT_SECRET'),
+      },
+    );
     if (!token) {
       throw new InternalServerErrorException();
     }
 
-    return { user, token };
+    return { user: excludeConfidentialFields(user), token };
   }
 
   @Post('signup')
-  @ApiTags('Authentication')
   @ApiOkResponse({
-    example: { email: 'example@gmail.com', password: 'example' },
+    example: { email: 'example@example.com', password: 'example' },
   })
   async signup(
     @Body(new ZodPipe(SignupPayloadSchema)) payload: SignupPayloadType,
@@ -53,16 +71,41 @@ export class AuthController {
     const encrypted = await bcrypt.hash(payload.password, 10);
 
     payload.password = encrypted;
-    const user = await this.service.createUser(payload);
+    const user = await this.userService.createUser(payload);
     if (!user) {
       throw new BadRequestException('invalid payload');
     }
 
-    const token = this.service.createJWTToken(user.id);
+    const token = this.jwtService.sign(
+      {
+        userId: user.id,
+      } satisfies TokenPayloadType,
+      {
+        secret: this.configService.get<string>('JWT_SECRET'),
+      },
+    );
     if (!token) {
       throw new InternalServerErrorException();
     }
 
-    return { user, token };
+    return { user: excludeConfidentialFields(user), token };
+  }
+
+  @Get('me')
+  @ApiTags('User')
+  @UseGuards(AuthGuard)
+  async getUserById(@UserId() userId: string) {
+    const user = await this.userService.getUserById(userId);
+    if (!user) {
+      throw new NotFoundException();
+    }
+    return user;
   }
 }
+
+const excludeConfidentialFields = <T extends { password?: string }>(
+  data: T,
+): Omit<T, 'password'> => {
+  delete data.password;
+  return data;
+};

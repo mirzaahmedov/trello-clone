@@ -6,7 +6,7 @@ import { Prisma } from '@prisma/client';
 export class CommentService {
   constructor(private readonly prisma: PrismaService) {}
 
-  createComment(data: Prisma.commentCreateInput) {
+  createComment(data: Prisma.CommentCreateInput) {
     return this.prisma.comment.create({ data });
   }
 
@@ -28,8 +28,8 @@ export class CommentService {
   }
 
   updateComment(
-    where: Prisma.commentUpdateArgs['where'],
-    data: Prisma.commentUpdateInput,
+    where: Prisma.CommentUpdateArgs['where'],
+    data: Prisma.CommentUpdateInput,
   ) {
     return this.prisma.comment.update({
       data,
@@ -37,7 +37,7 @@ export class CommentService {
     });
   }
 
-  deleteComment(where: Prisma.commentDeleteArgs['where']) {
+  deleteComment(where: Prisma.CommentDeleteArgs['where']) {
     return this.prisma.comment.delete({
       where,
     });

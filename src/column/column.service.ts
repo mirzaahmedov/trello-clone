@@ -6,7 +6,7 @@ import { Prisma } from '@prisma/client';
 export class ColumnService {
   constructor(private prisma: PrismaService) {}
 
-  createColumn(input: Prisma.columnCreateInput) {
+  createColumn(input: Prisma.ColumnCreateInput) {
     return this.prisma.column.create({
       data: input,
     });
@@ -29,15 +29,15 @@ export class ColumnService {
     });
   }
 
-  deleteColumn(where: Prisma.columnDeleteArgs['where']) {
+  deleteColumn(where: Prisma.ColumnDeleteArgs['where']) {
     return this.prisma.column.delete({
       where,
     });
   }
 
   updateColumn(
-    where: Prisma.columnUpdateArgs['where'],
-    data: Prisma.columnUpdateInput,
+    where: Prisma.ColumnUpdateArgs['where'],
+    data: Prisma.ColumnUpdateInput,
   ) {
     return this.prisma.column.update({
       data,

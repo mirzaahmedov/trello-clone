@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const CommentCreatePayloadSchema = z.object({
-  content: z.string().min(1, 'required'),
+  content: z.string().min(1),
 });
 export type CommentCreatePayloadType = z.infer<
   typeof CommentCreatePayloadSchema

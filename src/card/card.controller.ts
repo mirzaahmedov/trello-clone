@@ -11,8 +11,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { CardService } from './card.service';
-import { CardUpdatePayloadSchema, CardUpdatePayloadType } from './card.schema';
-import { ZodPipe } from '@app/utils/validation/zod.pipe';
+import { CardUpdatePayloadSchema, CardUpdatePayloadType } from './card.models';
+import { ZodPipe } from '@app/utils/zod/zod.pipe';
 import { UserId } from '@app/auth/auth.decorator';
 import { AuthGuard } from '@app/auth/auth.guard';
 import { ApiTags } from '@nestjs/swagger';

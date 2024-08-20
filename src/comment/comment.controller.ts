@@ -18,8 +18,8 @@ import {
   CommentCreatePayloadType,
   CommentUpdatePayloadSchema,
   CommentUpdatePayloadType,
-} from './comment.schema';
-import { ZodPipe } from '@app/utils/validation/zod.pipe';
+} from './comment.models';
+import { ZodPipe } from '@app/utils/zod/zod.pipe';
 import { ApiTags } from '@nestjs/swagger';
 
 @Controller('cards/:cardId/comments')
